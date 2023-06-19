@@ -9,6 +9,8 @@ find_package(OpenCV REQUIRED)
 include_directories(/opt/homebrew/Cellar/opencv/4.7.0_4/include)
 link_directories(/opt/homebrew/Cellar/opencv/4.7.0_4/lib)
 
+link_directories(/Users/polina/Desktop/С++/2_Project/cmake-build-debug/pics/)
+
 add_executable(opencv main.cpp Detector_edge.hpp)
 
 set(OpenCV_LIBS opencv_core opencv_imgproc opencv_highgui opencv_imgcodecs)
