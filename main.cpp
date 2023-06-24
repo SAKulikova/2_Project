@@ -9,22 +9,41 @@
 //#include "opencv2/video/photo.hpp" //Алгоритмы обработки и восстановления фотографий.
 #include "opencv2/highgui/highgui.hpp" //Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
 #include <filesystem>
+#include <vector>
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
-cv::Mat imgOriginal, img_bright;
+
 double alpha = 1.0; //< Simple contrast control
 int beta = 0; //< Simple brightness control
-void Bright_Threshold(){
-    for( int i = 0; i < imgOriginal.rows; i++ ) {
-        for( int j = 0; j < imgOriginal.cols; j++ ) {
-            for( int z = 0; z < imgOriginal.channels(); z++ ) {
-                img_bright.at<Vec3b>(j,i)[z] = saturate_cast<uchar>( alpha*imgOriginal.at<Vec3b>(j,i)[z] + beta );
+int brightnessValue = 50; // начальное значение яркости
+
+void onTrackbar(int, void*)
+{
+    cv::Mat imgOriginal;
+    cv::Mat image = imgOriginal;
+    // обработчик события изменения положения трекбара
+    // получаем новое значение яркости
+    int newValue = brightnessValue - 50; // приводим из диапазона [0, 100] к [-50, 50]
+    // загружаем изображение
+
+
+    // увеличиваем яркость изображения
+    Mat img_bright = Mat::zeros(image.size(), image.type());
+    for (int y = 0; y < image.rows; y++)
+    {
+        for (int x = 0; x < image.cols; x++)
+        {
+            for (int c = 0; c < image.channels(); c++)
+            {
+                img_bright.at<Vec3b>(y, x)[c] = saturate_cast<uchar>(image.at<Vec3b>(y, x)[c] + newValue);
             }
         }
     }
+    // выводим изображение на экран
     imshow("Bright", img_bright);
 }
+
 
 int main()
 {
@@ -114,9 +133,23 @@ int main()
         imshow("Bright", img_bright)
     }*/
     //Bright_Threshold(0, 0);
+    //cv::Mat imgOriginal
 
-    cv::createTrackbar("Brightness", "Bright", &min_bright, max_bright,
-                       reinterpret_cast<TrackbarCallback>(Bright_Threshold));
+    double alpha = 1.0; //< Simple contrast control
+    int beta = 0; //< Simple brightness control
+    /*void Bright_Threshold(){
+        for( int i = 0; i < imgOriginal.rows; i++ ) {
+            for( int j = 0; j < imgOriginal.cols; j++ ) {
+                for( int z = 0; z < imgOriginal.channels(); z++ ) {
+                    img_bright.at<Vec3b>(j,i)[z] = saturate_cast<uchar>( alpha*imgOriginal.at<Vec3b>(j,i)[z] + beta );
+                }
+            }
+        }
+        imshow("Bright", img_bright);
+    }*/
+
+    cv::createTrackbar("Brightness", "Bright", &brightnessValue, 100,
+                       onTrackbar);
     cv::imshow("Bright", img_bright);
 
     ///RGB в отдельныъ окнах
