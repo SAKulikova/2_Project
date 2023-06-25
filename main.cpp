@@ -3,52 +3,35 @@
 #include <iostream>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
-#include <stdio.h>
+//#include <stdio.h>
 #include "Detector_edge.hpp"
-#include "opencv2/imgproc/imgproc.hpp" //Новые функции обработки изображений, написанные на C++.
+#include "Brightness.hpp"
+//#include "opencv2/imgproc/imgproc.hpp" //Новые функции обработки изображений, написанные на C++.
 //#include "opencv2/video/photo.hpp" //Алгоритмы обработки и восстановления фотографий.
-#include "opencv2/highgui/highgui.hpp" //Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
+//#include "opencv2/highgui/highgui.hpp" //Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
 #include <filesystem>
 #include <vector>
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
+//double alpha = 1.0; //< Simple contrast control
+//int beta = 0; //< Simple brightness control*/
 
-double alpha = 1.0; //< Simple contrast control
-int beta = 0; //< Simple brightness control
-int brightnessValue = 50; // начальное значение яркости
-
-void onTrackbar(int, void*)
+void onTrackbar(int value, void* userData)
 {
-    cv::Mat imgOriginal;
-    cv::Mat image = imgOriginal;
-    // обработчик события изменения положения трекбара
-    // получаем новое значение яркости
-    int newValue = brightnessValue - 50; // приводим из диапазона [0, 100] к [-50, 50]
-    // загружаем изображение
+    Mat* image = (Mat*)userData;
 
+    // изменение яркости изображения
+    Mat img_bright;
+    image->convertTo(img_bright, -1, value / 100.0, 0);
 
-    // увеличиваем яркость изображения
-    Mat img_bright = Mat::zeros(image.size(), image.type());
-    for (int y = 0; y < image.rows; y++)
-    {
-        for (int x = 0; x < image.cols; x++)
-        {
-            for (int c = 0; c < image.channels(); c++)
-            {
-                img_bright.at<Vec3b>(y, x)[c] = saturate_cast<uchar>(image.at<Vec3b>(y, x)[c] + newValue);
-            }
-        }
-    }
-    // выводим изображение на экран
+    // отображение измененного изображения
     imshow("Bright", img_bright);
 }
-
 
 int main()
 {
     cv::Mat imgOriginal;        // input image
-
     std::string directory_name = "/Users/polina/Desktop/С++/2_Project/cmake-build-debug/";
     std::string extension = ".png";
 
@@ -102,7 +85,7 @@ int main()
     cv::namedWindow("Edge Detection", WINDOW_AUTOSIZE);
     ///Canny Edge Detector
     createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, CannyThreshold);
-    CannyThreshold(0,0);
+    CannyThreshold(0,nullptr);
     ///laplactian Edge Detector
     //laplacianDectection();
     imshow("Original",imgOriginal);
@@ -115,46 +98,25 @@ int main()
     img_neg = cv::Scalar(255,255,255) - imgOriginal; ///Вычисляем негатив
     cv::imshow("Negative", img_neg);
 
-    ///Яркость
-    cv::Mat img_bright;
-    cv::namedWindow("Bright", WINDOW_AUTOSIZE);
-    //img_bright = imgOriginal + 40;
+    ///Яркость и контрастность
 
-    int min_bright = 0;
-    int max_bright = 100;
-    /*void Bright_Threshold(){
-        for( int i = 0; i < imgOriginal.rows; i++ ) {
-            for( int j = 0; j < imgOriginal.cols; j++ ) {
-                for( int z = 0; z < imgOriginal.channels(); z++ ) {
-                    img_bright.at<Vec3b>(y,x)[c] = saturate_cast<uchar>( alpha*imgOriginal.at<Vec3b>(y,x)[c] + beta );
-                }
-            }
-        }
-        imshow("Bright", img_bright)
-    }*/
-    //Bright_Threshold(0, 0);
-    //cv::Mat imgOriginal
+    cv::Mat image = imgOriginal;
 
-    double alpha = 1.0; //< Simple contrast control
-    int beta = 0; //< Simple brightness control
-    /*void Bright_Threshold(){
-        for( int i = 0; i < imgOriginal.rows; i++ ) {
-            for( int j = 0; j < imgOriginal.cols; j++ ) {
-                for( int z = 0; z < imgOriginal.channels(); z++ ) {
-                    img_bright.at<Vec3b>(j,i)[z] = saturate_cast<uchar>( alpha*imgOriginal.at<Vec3b>(j,i)[z] + beta );
-                }
-            }
-        }
-        imshow("Bright", img_bright);
-    }*/
+    namedWindow("Bright");
+    namedWindow("Contrast");
 
-    cv::createTrackbar("Brightness", "Bright", &brightnessValue, 100,
-                       onTrackbar);
-    cv::imshow("Bright", img_bright);
+    int brightness = 50;
+    createTrackbar("Brightness", "Bright", &brightness, 100, on_brightness_trackbar, &imgOriginal);
 
-    ///RGB в отдельныъ окнах
-    cv::Mat sum_rgb;  // variable image of datatype Matrix
-   // cv::imshow("Display Image", imgOriginal);
+    int contrast = 50;
+    createTrackbar("Contrast", "Contrast", &contrast, 100, on_contrast_trackbar, &imgOriginal);
+
+    imshow("Contrast", image);
+    imshow("Bright", image);
+
+        ///RGB в отдельныъ окнах
+    //cv::Mat sum_rgb;  // variable image of datatype Matrix
+    //cv::imshow("Display Image", imgOriginal);
 
     // three channel to store b, g, r
     cv::Mat rgbchannel[3];
@@ -163,17 +125,17 @@ int main()
     cv::split(imgOriginal, rgbchannel);
 
     // plot individual component
-    //cv::namedWindow("Blue",WINDOW_AUTOSIZE);
-    //cv::imshow("Red", rgbchannel[0]);
+    cv::namedWindow("Blue",WINDOW_AUTOSIZE);
+    cv::imshow("Red", rgbchannel[0]);
 
-    //cv::namedWindow("Green",WINDOW_AUTOSIZE);
-    //cv::imshow("Green", rgbchannel[1]);
+    cv::namedWindow("Green",WINDOW_AUTOSIZE);
+    cv::imshow("Green", rgbchannel[1]);
 
-    //cv::namedWindow("Red",WINDOW_AUTOSIZE);
-    //cv::imshow("Blue", rgbchannel[2]);
+    cv::namedWindow("Red",WINDOW_AUTOSIZE);
+    cv::imshow("Blue", rgbchannel[2]);
 
-    // merge : (input, num_of_channel, output)
-    cv::merge(rgbchannel, 3, sum_rgb);
+    //merge : (input, num_of_channel, output)
+    //cv::merge(rgbchannel, 3, sum_rgb);
     //cv::imshow("Merged", sum_rgb);
 
     waitKey(0);

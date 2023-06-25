@@ -5,7 +5,7 @@
 #include <opencv2/opencv.hpp>
 using namespace std;
 using namespace cv;
-Mat img, gray, blurred, edge;
+Mat gray, blurred, edge;
 //Laplacian Operator Variables
 int kernel_size =3;
 int ddepth = CV_16S; //глубина оператора лапласа
