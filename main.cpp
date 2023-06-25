@@ -1,40 +1,23 @@
-// canny_img.cpp
-#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc.hpp>//Новые функции обработки изображений, написанные на C++.
 #include <iostream>
+#include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/highgui.hpp>//Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
 //#include <stdio.h>
 #include "Detector_edge.hpp"
 #include "Brightness.hpp"
-//#include "opencv2/imgproc/imgproc.hpp" //Новые функции обработки изображений, написанные на C++.
-//#include "opencv2/video/photo.hpp" //Алгоритмы обработки и восстановления фотографий.
-//#include "opencv2/highgui/highgui.hpp" //Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
 #include <filesystem>
 #include <vector>
+#include "Blur.hpp"
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
-//double alpha = 1.0; //< Simple contrast control
-//int beta = 0; //< Simple brightness control*/
-
-void onTrackbar(int value, void* userData)
-{
-    Mat* image = (Mat*)userData;
-
-    // изменение яркости изображения
-    Mat img_bright;
-    image->convertTo(img_bright, -1, value / 100.0, 0);
-
-    // отображение измененного изображения
-    imshow("Bright", img_bright);
-}
 
 int main()
 {
     cv::Mat imgOriginal;        // input image
-    std::string directory_name = "/Users/polina/Desktop/С++/2_Project/cmake-build-debug/";
+    std::string directory_name = "/Users/sonya/Desktop/Git/2_Project/cmake-build-debug/pics/";
     std::string extension = ".png";
-
     std::cout<<"Варианты файлов: ";
     try // Может быть исключение, например, если папки не существует
     {
@@ -46,13 +29,9 @@ int main()
             std::string name(p.path().filename());
 
             // Проверяем, что имя заканчивается нужным расширением
-            // В С++20 можно будет просто `bool match = name.ends_with(extension);`
             bool match = name.ends_with(extension);
-            //bool match = !name.compare(name.size() - extension.size(), extension.size(), extension);
             if (!match)
                 continue;
-
-            // Тут делаем с путем то, что нужно
             std::cout << name << " ";
         }
         std::cout<<std::endl;
@@ -72,7 +51,6 @@ int main()
     catch (std::exception &e) {
         std::cout << "Error: " << e.what() << '\n';
     }
-    //img = imread("animal.jpeg",-1);
 
     cv::Mat imgGrayscale;        // grayscale of input image
     cv::Mat imgBlurred;            // intermediate blured image
@@ -80,17 +58,11 @@ int main()
 
     cvtColor(imgOriginal, gray, COLOR_BGR2GRAY);//преобразование изображения в оттенки серого
     cv::namedWindow("Original", WINDOW_AUTOSIZE);
-    //cv::namedWindow("Gray", WINDOW_AUTOSIZE);
-    //cv::namedWindow("Blurred", WINDOW_AUTOSIZE);
     cv::namedWindow("Edge Detection", WINDOW_AUTOSIZE);
     ///Canny Edge Detector
     createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, CannyThreshold);
     CannyThreshold(0,nullptr);
-    ///laplactian Edge Detector
-    //laplacianDectection();
     imshow("Original",imgOriginal);
-    //imshow("Gray",gray);
-   // imshow("Blurred",blurred);
     imshow("Edge Detection",edge);
 
     ///Negative
@@ -99,9 +71,7 @@ int main()
     cv::imshow("Negative", img_neg);
 
     ///Яркость и контрастность
-
     cv::Mat image = imgOriginal;
-
     namedWindow("Bright");
     namedWindow("Contrast");
 
@@ -114,10 +84,7 @@ int main()
     imshow("Contrast", image);
     imshow("Bright", image);
 
-        ///RGB в отдельныъ окнах
-    //cv::Mat sum_rgb;  // variable image of datatype Matrix
-    //cv::imshow("Display Image", imgOriginal);
-
+        ///RGB в отдельных окнах
     // three channel to store b, g, r
     cv::Mat rgbchannel[3];
 
@@ -134,9 +101,6 @@ int main()
     cv::namedWindow("Red",WINDOW_AUTOSIZE);
     cv::imshow("Blue", rgbchannel[2]);
 
-    //merge : (input, num_of_channel, output)
-    //cv::merge(rgbchannel, 3, sum_rgb);
-    //cv::imshow("Merged", sum_rgb);
 
     waitKey(0);
 return 0;
