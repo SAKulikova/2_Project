@@ -3,31 +3,12 @@
 #include <iostream>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
-//#include <stdio.h>
-#include "Detector_edge.hpp"
-#include "Brightness.hpp"
-//#include "opencv2/imgproc/imgproc.hpp" //Новые функции обработки изображений, написанные на C++.
-//#include "opencv2/video/photo.hpp" //Алгоритмы обработки и восстановления фотографий.
-//#include "opencv2/highgui/highgui.hpp" //Новые написанные на C++ функции вывода изображений, ползунков, взаимодействия с помощью мыши, ввода-вывода.
+#include "Trackbar.hpp"
 #include <filesystem>
-#include <vector>
+
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
-//double alpha = 1.0; //< Simple contrast control
-//int beta = 0; //< Simple brightness control*/
-
-void onTrackbar(int value, void* userData)
-{
-    Mat* image = (Mat*)userData;
-
-    // изменение яркости изображения
-    Mat img_bright;
-    image->convertTo(img_bright, -1, value / 100.0, 0);
-
-    // отображение измененного изображения
-    imshow("Bright", img_bright);
-}
 
 int main()
 {
@@ -44,15 +25,10 @@ int main()
                 continue; // Пропускаем, если это не простой файл, а папка или что-то другое
 
             std::string name(p.path().filename());
-
-            // Проверяем, что имя заканчивается нужным расширением
-            // В С++20 можно будет просто `bool match = name.ends_with(extension);`
             bool match = name.ends_with(extension);
-            //bool match = !name.compare(name.size() - extension.size(), extension.size(), extension);
             if (!match)
                 continue;
 
-            // Тут делаем с путем то, что нужно
             std::cout << name << " ";
         }
         std::cout<<std::endl;
@@ -72,7 +48,6 @@ int main()
     catch (std::exception &e) {
         std::cout << "Error: " << e.what() << '\n';
     }
-    //img = imread("animal.jpeg",-1);
 
     cv::Mat imgGrayscale;        // grayscale of input image
     cv::Mat imgBlurred;            // intermediate blured image
@@ -80,8 +55,6 @@ int main()
 
     cvtColor(imgOriginal, gray, COLOR_BGR2GRAY);//преобразование изображения в оттенки серого
     cv::namedWindow("Original", WINDOW_AUTOSIZE);
-    //cv::namedWindow("Gray", WINDOW_AUTOSIZE);
-    //cv::namedWindow("Blurred", WINDOW_AUTOSIZE);
     cv::namedWindow("Edge Detection", WINDOW_AUTOSIZE);
     ///Canny Edge Detector
     createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, CannyThreshold);
@@ -89,8 +62,6 @@ int main()
     ///laplactian Edge Detector
     //laplacianDectection();
     imshow("Original",imgOriginal);
-    //imshow("Gray",gray);
-   // imshow("Blurred",blurred);
     imshow("Edge Detection",edge);
 
     ///Negative
@@ -100,31 +71,25 @@ int main()
 
     ///Яркость и контрастность
 
-    cv::Mat image = imgOriginal;
+    cv::Mat image = imgOriginal; ///???
 
     namedWindow("Bright");
     namedWindow("Contrast");
 
-    int brightness = 50;
     createTrackbar("Brightness", "Bright", &brightness, 100, on_brightness_trackbar, &imgOriginal);
 
-    int contrast = 50;
     createTrackbar("Contrast", "Contrast", &contrast, 100, on_contrast_trackbar, &imgOriginal);
 
     imshow("Contrast", image);
     imshow("Bright", image);
 
         ///RGB в отдельныъ окнах
-    //cv::Mat sum_rgb;  // variable image of datatype Matrix
-    //cv::imshow("Display Image", imgOriginal);
-
-    // three channel to store b, g, r
+    // 3 канала b, g, r
     cv::Mat rgbchannel[3];
 
-    // split image
+    // разделение изображения
     cv::split(imgOriginal, rgbchannel);
 
-    // plot individual component
     cv::namedWindow("Blue",WINDOW_AUTOSIZE);
     cv::imshow("Red", rgbchannel[0]);
 
@@ -134,9 +99,11 @@ int main()
     cv::namedWindow("Red",WINDOW_AUTOSIZE);
     cv::imshow("Blue", rgbchannel[2]);
 
-    //merge : (input, num_of_channel, output)
-    //cv::merge(rgbchannel, 3, sum_rgb);
-    //cv::imshow("Merged", sum_rgb);
+    ///Blur
+    namedWindow("Blur", WINDOW_NORMAL);
+
+    createTrackbar("Kernel size", "Blur", &kernel, maximum_value, on_blur_trackbar, &imgOriginal); // создаем трекбар
+    imshow("Blur", image);
 
     waitKey(0);
 return 0;
