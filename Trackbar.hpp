@@ -6,20 +6,9 @@
 using namespace std;
 using namespace cv;
 Mat gray, blurred, edge;
-//Laplacian Operator Variables
-int kernel_size = 3;
-int ddepth = CV_16S; //глубина оператора лапласа
 ///Canny Edge Detection Variables
 int lowerThreshold = 0; //нижний порог
 int max_lowThreshold = 100;//максимальное значение
-void laplacianDectection()
-{
-    //сглаживаем изображение, чтобы уменьшить часть шумов
-    GaussianBlur(gray,blurred,cv::Size(3,3),3);
-    Laplacian(blurred, edge, ddepth, kernel_size);
-    //converting back to CV_8U
-    convertScaleAbs(edge, edge);
-}
 void CannyThreshold(int, void*){
     GaussianBlur(gray, blurred, cv::Size (3,3),3 );
     Canny(blurred,edge,lowerThreshold,50);
@@ -48,7 +37,6 @@ void on_contrast_trackbar(int value, void* userdata)
 //Размытие изображения
 int kernel = 3;
 const int maximum_value = 50; // максимальное значение степени размытия
-
 void on_blur_trackbar(int, void* userdata)
 {
     Mat* image = static_cast<Mat*>(userdata);

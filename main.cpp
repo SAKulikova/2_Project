@@ -5,7 +5,6 @@
 #include <opencv2/highgui.hpp>
 #include "Trackbar.hpp"
 #include <filesystem>
-
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
@@ -13,7 +12,7 @@ namespace fs = std::filesystem; // Чтобы не писать `std::filesystem
 int main()
 {
     cv::Mat imgOriginal;        // input image
-    std::string directory_name = "/Users/polina/Desktop/С++/2_Project/cmake-build-debug/";
+    std::string directory_name = "/Users/sonya/Desktop/Git/2_Project/cmake-build-debug/pics/";
     std::string extension = ".png";
 
     std::cout<<"Варианты файлов: ";
@@ -59,8 +58,6 @@ int main()
     ///Canny Edge Detector
     createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, CannyThreshold);
     CannyThreshold(0,nullptr);
-    ///laplactian Edge Detector
-    //laplacianDectection();
     imshow("Original",imgOriginal);
     imshow("Edge Detection",edge);
 
@@ -71,13 +68,12 @@ int main()
 
     ///Яркость и контрастность
 
-    cv::Mat image = imgOriginal; ///???
+    cv::Mat image = imgOriginal; ///???what is it?
 
     namedWindow("Bright");
     namedWindow("Contrast");
 
     createTrackbar("Brightness", "Bright", &brightness, 100, on_brightness_trackbar, &imgOriginal);
-
     createTrackbar("Contrast", "Contrast", &contrast, 100, on_contrast_trackbar, &imgOriginal);
 
     imshow("Contrast", image);
@@ -101,7 +97,6 @@ int main()
 
     ///Blur
     namedWindow("Blur", WINDOW_NORMAL);
-
     createTrackbar("Kernel size", "Blur", &kernel, maximum_value, on_blur_trackbar, &imgOriginal); // создаем трекбар
     imshow("Blur", image);
 
