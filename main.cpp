@@ -9,7 +9,7 @@ namespace fs = std::filesystem; // Чтобы не писать `std::filesystem
 int main()
 {
     cv::Mat imgOriginal;        // input image
-    std::string directory_name = "/Users/polina/Desktop/С++/2_Project/cmake-build-debug/";
+    std::string directory_name = "/Users/polina/Desktop/С++/2_Project/";
     std::string extension = ".png";
 
     std::cout<<"Варианты файлов: ";
