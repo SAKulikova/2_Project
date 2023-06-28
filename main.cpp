@@ -1,18 +1,13 @@
-// canny_img.cpp
-#include <opencv2/imgproc.hpp>
 #include <iostream>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 #include "Trackbar.hpp"
 #include <filesystem>
 using namespace std;
 using namespace cv;
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
-
 int main()
 {
     cv::Mat imgOriginal;        // input image
-    std::string directory_name = "/Users/sonya/Desktop/Git/2_Project/cmake-build-debug/pics/";
+    std::string directory_name = "/Users/sonya/Desktop/Git/2_Project/pics/";
     std::string extension = ".png";
 
     std::cout<<"Варианты файлов: ";
@@ -51,13 +46,12 @@ int main()
     cv::Mat imgGrayscale;        // grayscale of input image
     cv::Mat imgBlurred;            // intermediate blured image
     cv::Mat imgCanny;            // Canny edge image
-
     cvtColor(imgOriginal, gray, COLOR_BGR2GRAY);//преобразование изображения в оттенки серого
     cv::namedWindow("Original", WINDOW_AUTOSIZE);
     cv::namedWindow("Edge Detection", WINDOW_AUTOSIZE);
     ///Canny Edge Detector
-    createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, CannyThreshold);
-    CannyThreshold(0,nullptr);
+    createTrackbar("Min Threshold", "Edge Detection", &lowerThreshold, max_lowThreshold, Bar::CannyThreshold);
+    Bar::CannyThreshold(0,nullptr);
     imshow("Original",imgOriginal);
     imshow("Edge Detection",edge);
 
@@ -68,19 +62,21 @@ int main()
 
     ///Яркость и контрастность
 
-    cv::Mat image = imgOriginal; ///???what is it?
+   // cv::Mat image = imgOriginal;
 
     namedWindow("Bright");
     namedWindow("Contrast");
 
-    createTrackbar("Brightness", "Bright", &brightness, 100, on_brightness_trackbar, &imgOriginal);
-    createTrackbar("Contrast", "Contrast", &contrast, 100, on_contrast_trackbar, &imgOriginal);
+    createTrackbar("Brightness", "Bright", &brightness, 100, Bar::on_brightness_trackbar, &imgOriginal);
+    createTrackbar("Contrast", "Contrast", &contrast, 100, Bar::on_contrast_trackbar, &imgOriginal);
 
-    imshow("Contrast", image);
-    imshow("Bright", image);
+    Bar::on_contrast_trackbar(0, nullptr);
+    Bar::on_brightness_trackbar(0, nullptr);
 
-        ///RGB в отдельныъ окнах
-    // 3 канала b, g, r
+    imshow("Contrast", imgOriginal);
+    imshow("Bright", imgOriginal);
+
+    ///RGB в отдельныъ окнах
     cv::Mat rgbchannel[3];
 
     // разделение изображения
@@ -97,8 +93,8 @@ int main()
 
     ///Blur
     namedWindow("Blur", WINDOW_NORMAL);
-    createTrackbar("Kernel size", "Blur", &kernel, maximum_value, on_blur_trackbar, &imgOriginal); // создаем трекбар
-    imshow("Blur", image);
+    createTrackbar("Kernel size", "Blur", &kernel, maximum_value, Bar::on_blur_trackbar, &imgOriginal);
+    imshow("Blur", imgOriginal);
 
     waitKey(0);
 return 0;
