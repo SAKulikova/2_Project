@@ -18,9 +18,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26511a2c-c0d1-4f89-84ca-91c84b33c786" name="Changes" comment="всё сделано">
-      <change beforePath="$PROJECT_DIR$/Trackbar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Trackbar.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+    <list default="true" id="26511a2c-c0d1-4f89-84ca-91c84b33c786" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +65,12 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="opencv" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="opencv" TARGET_NAME="opencv" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="opencv" RUN_TARGET_NAME="opencv">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -93,7 +97,8 @@
       <workItem from="1688047571452" duration="6090000" />
       <workItem from="1688125499498" duration="627000" />
       <workItem from="1688141253156" duration="792000" />
-      <workItem from="1688142109779" duration="8000" />
+      <workItem from="1688142109779" duration="70000" />
+      <workItem from="1688142189028" duration="15000" />
     </task>
     <task id="LOCAL-00001" summary="brightness and contrast">
       <created>1687199658541</created>

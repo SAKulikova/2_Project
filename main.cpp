@@ -41,10 +41,7 @@ int main()
         std::cout << "Error: " << e.what() << '\n';
     }
 
-    /*cv::Mat imgGrayscale;
-    cv::Mat imgBlurred;
-    cv::Mat imgCanny;
-    cvtColor(imgOriginal, Bar::Track::gray, cv::COLOR_BGR2GRAY);*/
+    cvtColor(imgOriginal, Bar::Track::gray, cv::COLOR_BGR2GRAY);
     cv::namedWindow("Original", cv::WINDOW_AUTOSIZE);
     cv::namedWindow("Edge Detection", cv::WINDOW_AUTOSIZE);
     imshow("Original",imgOriginal);
