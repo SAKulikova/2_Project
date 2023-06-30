@@ -1,7 +1,4 @@
-#include <opencv2/imgproc.hpp>
 #include <iostream>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 #include "Trackbar.hpp"
 #include <filesystem>
 namespace fs = std::filesystem; // Чтобы не писать `std::filesystem` каждый раз
@@ -9,7 +6,7 @@ namespace fs = std::filesystem; // Чтобы не писать `std::filesystem
 int main()
 {
     cv::Mat imgOriginal;        // input image
-    std::string directory_name = "/Users/polina/Desktop/С++/2_Project/";
+    std::string directory_name = "/Users/polina/Documents/Git/2-semestr/2_Project/pics/";
     std::string extension = ".png";
 
     std::cout<<"Варианты файлов: ";
@@ -34,7 +31,6 @@ int main()
 
         std::cout << "Поиск изображения " + img_addr << std::endl;
         imgOriginal = cv::imread(directory_name + img_addr);            // open image
-
         if (imgOriginal.empty())
         {                                    // if unable to open image
             std::cout << "error: изображение пустое.\n";        // show error message on command line
@@ -48,17 +44,14 @@ int main()
     cv::Mat imgGrayscale;        // grayscale of input image
     cv::Mat imgBlurred;            // intermediate blured image
     cv::Mat imgCanny;            // Canny edge image
-    //cv::Mat gray, blurred, edge;
-    cvtColor(imgOriginal, editor::gray, cv::COLOR_BGR2GRAY);//преобразование изображения в оттенки серого
+    cvtColor(imgOriginal, Bar::Track::gray, cv::COLOR_BGR2GRAY);//преобразование изображения в оттенки серого
     cv::namedWindow("Original", cv::WINDOW_AUTOSIZE);
     cv::namedWindow("Edge Detection", cv::WINDOW_AUTOSIZE);
-    //int lowerThreshold = 0; //нижний порог
-    const int max_lowThreshold = 100;//максимальное значение
-    ///Canny Edge Detector
-    cv::createTrackbar("Min Threshold", "Edge Detection", &editor::lowerThreshold, max_lowThreshold, editor::CannyThreshold);
-    editor::CannyThreshold(0,nullptr);
     imshow("Original",imgOriginal);
-    imshow("Edge Detection",editor::edge);
+    ///Canny Edge Detector
+    cv::createTrackbar("Min Threshold", "Edge Detection", &Bar::Track::lowerThreshold, Bar::Track::max_lowThreshold, Bar::Track::CannyThreshold);
+    Bar::Track::CannyThreshold(0,nullptr);
+    imshow("Edge Detection",Bar::Track::edge);
 
     ///Negative
     cv::Mat img_neg;
@@ -66,44 +59,31 @@ int main()
     cv::imshow("Negative", img_neg);
 
     ///Яркость и контрастность
-
-    cv::Mat img = imgOriginal; ///???
+    cv::Mat image1 = imgOriginal;
+    cv::Mat image2 = imgOriginal;
 
     cv::namedWindow("Bright");
     cv::namedWindow("Contrast");
 
-    //int brightness = 50;
-    createTrackbar("Brightness", "Bright", &editor::brightness, 100, editor::on_brightness_trackbar, &imgOriginal);
-    //int contrast = 50;
-    createTrackbar("Contrast", "Contrast", &editor::contrast, 100, editor::on_contrast_trackbar, &imgOriginal);
+    createTrackbar("Brightness", "Bright", &Bar::Track::brightness, 100, Bar::Track::on_brightness_trackbar, &image1);
+    createTrackbar("Contrast", "Contrast", &Bar::Track::contrast, 100, Bar::Track::on_contrast_trackbar, &image2);
 
-    imshow("Contrast", img);
-    imshow("Bright", img);
+    Bar::Track::on_contrast_trackbar(0, &image1);
+    Bar::Track::on_brightness_trackbar(0, &image2);
 
-        ///RGB в отдельныъ окнах
-    // 3 канала b, g, r
-    cv::Mat rgbchannel[3];
-
-    // разделение изображения
-    cv::split(imgOriginal, rgbchannel);
-
-    cv::namedWindow("Blue",cv::WINDOW_AUTOSIZE);
-    cv::imshow("Red", rgbchannel[0]);
-
-    cv::namedWindow("Green",cv::WINDOW_AUTOSIZE);
-    cv::imshow("Green", rgbchannel[1]);
-
-    cv::namedWindow("Red",cv::WINDOW_AUTOSIZE);
-    cv::imshow("Blue", rgbchannel[2]);
+    imshow("Contrast", imgOriginal);
+    imshow("Bright", imgOriginal);
 
     ///Blur
-    namedWindow("Blur", cv::WINDOW_NORMAL);
-    cv::Mat image;
-    //int kernel = 3;
-    const int maximum_value = 50;
-    createTrackbar("Kernel size", "Blur", &editor::kernel, maximum_value, editor::on_blur_trackbar, &imgOriginal); // создаем трекбар
-    imshow("Blur", image);
+    cv::namedWindow("Blur", cv::WINDOW_NORMAL);
+    createTrackbar("Kernel size", "Blur", &Bar::Track::kernel, Bar::Track::maximum_value, Bar::Track::on_blur_trackbar, &imgOriginal);
+    cv::imshow("Blur", imgOriginal);
+
+    ///RGB filter
+    cv::namedWindow("RGB", cv::WINDOW_AUTOSIZE);
+    cv::Mat filtered_image = Bar::Track::max_rgb_filter(imgOriginal);
+    cv::imshow("RGB", filtered_image);
 
     cv::waitKey(0);
-return 0;
+    return 0;
 }

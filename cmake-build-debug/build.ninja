@@ -70,8 +70,8 @@ build CMakeFiles/opencv.dir/Trackbar.cpp.o: CXX_COMPILER__opencv_Debug /Users/po
 
 build opencv: CXX_EXECUTABLE_LINKER__opencv_Debug CMakeFiles/opencv.dir/main.cpp.o CMakeFiles/opencv.dir/Trackbar.cpp.o | /opt/homebrew/lib/libopencv_highgui.4.7.0.dylib /opt/homebrew/lib/libopencv_videoio.4.7.0.dylib /opt/homebrew/lib/libopencv_imgcodecs.4.7.0.dylib /opt/homebrew/lib/libopencv_imgproc.4.7.0.dylib /opt/homebrew/lib/libopencv_core.4.7.0.dylib
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk
-  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/opencv/4.7.0_4/lib -Wl,-rpath,/Users/polina/Desktop/С++/2_Project/cmake-build-debug/pics -Wl,-rpath,/opt/homebrew/lib  /opt/homebrew/lib/libopencv_highgui.4.7.0.dylib  /opt/homebrew/lib/libopencv_videoio.4.7.0.dylib  /opt/homebrew/lib/libopencv_imgcodecs.4.7.0.dylib  /opt/homebrew/lib/libopencv_imgproc.4.7.0.dylib  /opt/homebrew/lib/libopencv_core.4.7.0.dylib
-  LINK_PATH = -L/opt/homebrew/Cellar/opencv/4.7.0_4/lib   -L/Users/polina/Desktop/С++/2_Project/cmake-build-debug/pics
+  LINK_LIBRARIES = -Wl,-rpath,/opt/homebrew/Cellar/opencv/4.7.0_4/lib -Wl,-rpath,/opt/homebrew/lib  /opt/homebrew/lib/libopencv_highgui.4.7.0.dylib  /opt/homebrew/lib/libopencv_videoio.4.7.0.dylib  /opt/homebrew/lib/libopencv_imgcodecs.4.7.0.dylib  /opt/homebrew/lib/libopencv_imgproc.4.7.0.dylib  /opt/homebrew/lib/libopencv_core.4.7.0.dylib
+  LINK_PATH = -L/opt/homebrew/Cellar/opencv/4.7.0_4/lib
   OBJECT_DIR = CMakeFiles/opencv.dir
   POST_BUILD = :
   PRE_LINK = :
